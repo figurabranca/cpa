@@ -1,0 +1,543 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--color-background-tertiary);color:var(--color-text-primary)}
+.app{min-height:100vh;padding:0}
+.header{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;background:#1D9E75;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:500;font-size:14px}
+.header h1{font-size:16px;font-weight:500}
+.header-sub{font-size:12px;color:var(--color-text-secondary)}
+.tabs{display:flex;gap:4px;padding:0 24px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.tab{padding:10px 16px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-secondary);transition:color .15s}
+.tab.active{color:#1D9E75;border-bottom-color:#1D9E75;font-weight:500}
+.tab:hover:not(.active){color:var(--color-text-primary)}
+.content{padding:20px 24px;max-width:1100px}
+.panel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 16px}
+.metric-label{font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.metric-val{font-size:22px;font-weight:500}
+.metric-val.green{color:#1D9E75}
+.metric-val.red{color:#E24B4A}
+.metric-val.blue{color:#378ADD}
+.metric-val.amber{color:#BA7517}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:16px}
+.card-head{padding:14px 18px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.card-head h3{font-size:14px;font-weight:500}
+.card-body{padding:16px 18px}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:10px}
+.form-group label{font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:4px}
+.form-group input,.form-group select{width:100%;padding:8px 10px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary)}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:#1D9E75;box-shadow:0 0 0 2px rgba(29,158,117,.15)}
+.btn{padding:8px 16px;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);transition:all .15s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-primary{background:#1D9E75;border-color:#1D9E75;color:#fff}
+.btn-primary:hover{background:#0F6E56;border-color:#0F6E56}
+.btn-danger{background:transparent;border-color:#E24B4A;color:#E24B4A}
+.btn-danger:hover{background:#FCEBEB}
+.btn-sm{padding:4px 10px;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:8px 12px;text-align:left;font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.4px;border-bottom:0.5px solid var(--color-border-tertiary)}
+td{padding:9px 12px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--color-background-secondary)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.badge-green{background:#E1F5EE;color:#0F6E56}
+.badge-red{background:#FCEBEB;color:#A32D2D}
+.badge-blue{background:#E6F1FB;color:#185FA5}
+.badge-amber{background:#FAEEDA;color:#854F0B}
+.sep{height:0.5px;background:var(--color-border-tertiary);margin:16px 0}
+.empty{text-align:center;padding:40px;color:var(--color-text-tertiary);font-size:13px}
+.daily-row td input{background:transparent;border:none;width:100%;padding:4px;font-size:13px;color:var(--color-text-primary);text-align:right}
+.daily-row td input:focus{outline:none;background:var(--color-background-secondary);border-radius:4px}
+.profit-pos{color:#1D9E75;font-weight:500}
+.profit-neg{color:#E24B4A;font-weight:500}
+.plat-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.plat-name{font-size:15px;font-weight:500}
+.plat-sub{font-size:12px;color:var(--color-text-secondary)}
+.mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.mini-metric{background:var(--color-background-secondary);border-radius:6px;padding:10px 12px}
+.mini-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px}
+.mini-val{font-size:16px;font-weight:500}
+.hidden{display:none}
+#toast{position:fixed;bottom:20px;right:20px;background:#1D9E75;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+</style>
+
+<div id="toast"></div>
+
+<div class="app">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">CPA</div>
+      <div>
+        <div class="header h1" style="font-size:15px;font-weight:500">Gerenciamento CPA</div>
+        <div class="header-sub">iGaming · Controle de Contas e Resultados</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span id="current-date" style="font-size:12px;color:var(--color-text-secondary)"></span>
+      <button class="btn btn-sm" onclick="exportData()"><i class="ti ti-download" aria-hidden="true"></i> Exportar</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('painel',this)">Painel Geral</div>
+    <div class="tab" onclick="switchTab('plataformas',this)">Plataformas</div>
+    <div class="tab" onclick="switchTab('diario',this)">Acompanhamento Diário</div>
+    <div class="tab" onclick="switchTab('gastos',this)">Gastos</div>
+  </div>
+
+  <div class="content">
+
+    <!-- PAINEL GERAL -->
+    <div id="tab-painel">
+      <div class="panel-grid" id="main-metrics"></div>
+      <div class="card">
+        <div class="card-head"><h3>Resumo por Plataforma</h3></div>
+        <div class="card-body" style="padding:0">
+          <table>
+            <thead><tr>
+              <th>Plataforma</th><th>Contas</th>
+              <th>Total Depósito</th><th>Total Saque</th>
+              <th>BAU</th><th>Gastos</th><th>Resultado</th><th>Status</th>
+            </tr></thead>
+            <tbody id="summary-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLATAFORMAS -->
+    <div id="tab-plataformas" class="hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <div style="font-size:15px;font-weight:500">Plataformas CPA</div>
+          <div style="font-size:12px;color:var(--color-text-secondary)">Gerencie cada plataforma e suas contas</div>
+        </div>
+        <button class="btn btn-primary" onclick="showAddPlatform()"><i class="ti ti-plus" aria-hidden="true"></i> Nova Plataforma</button>
+      </div>
+
+      <!-- Add Platform Form -->
+      <div class="card hidden" id="add-plat-form">
+        <div class="card-head"><h3>Adicionar Plataforma</h3><button class="btn btn-sm" onclick="this.closest('#add-plat-form').classList.add('hidden')">✕</button></div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group"><label>Nome da Plataforma</label><input id="f-nome" placeholder="ex: 888, Bet365" /></div>
+            <div class="form-group"><label>Depósito por Conta (R$)</label><input id="f-dep" type="number" placeholder="500" /></div>
+            <div class="form-group"><label>Capital Inicial (R$)</label><input id="f-cap" type="number" placeholder="0" /></div>
+          </div>
+          <button class="btn btn-primary" onclick="addPlatform()">Adicionar Plataforma</button>
+        </div>
+      </div>
+
+      <div id="platforms-list"></div>
+    </div>
+
+    <!-- DIÁRIO -->
+    <div id="tab-diario" class="hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-size:15px;font-weight:500">Acompanhamento Diário</div>
+          <div style="font-size:12px;color:var(--color-text-secondary)">Registre lucro bruto e resultado por dia</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="form-group" style="margin:0"><select id="mes-sel" onchange="renderDaily()" style="font-size:12px;padding:6px 10px"></select></div>
+          <div class="form-group" style="margin:0"><select id="ano-sel" onchange="renderDaily()" style="font-size:12px;padding:6px 10px"></select></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h3>Registro Mensal</h3>
+          <div style="display:flex;gap:6px">
+            <span id="daily-total-bruto" style="font-size:13px;color:var(--color-text-secondary)"></span>
+            <span id="daily-total-lucro" style="font-size:13px;font-weight:500"></span>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table>
+            <thead><tr>
+              <th style="width:60px">Dia</th>
+              <th>Capital</th>
+              <th>Lucro Bruto (R$)</th>
+              <th>% Lucro</th>
+              <th>Lucro Líquido (R$)</th>
+            </tr></thead>
+            <tbody id="daily-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- GASTOS -->
+    <div id="tab-gastos" class="hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <div style="font-size:15px;font-weight:500">Controle de Gastos</div>
+          <div style="font-size:12px;color:var(--color-text-secondary)">SMS, Proxy e outros custos operacionais</div>
+        </div>
+        <button class="btn btn-primary" onclick="showAddGasto()"><i class="ti ti-plus" aria-hidden="true"></i> Registrar Gasto</button>
+      </div>
+
+      <div class="card hidden" id="add-gasto-form">
+        <div class="card-head"><h3>Novo Gasto</h3><button class="btn btn-sm" onclick="document.getElementById('add-gasto-form').classList.add('hidden')">✕</button></div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group"><label>Categoria</label>
+              <select id="g-cat">
+                <option>SMS</option><option>Proxy</option><option>VPN</option>
+                <option>Conta Virtual</option><option>Outros</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Descrição</label><input id="g-desc" placeholder="Detalhe o gasto" /></div>
+            <div class="form-group"><label>Valor (R$)</label><input id="g-val" type="number" placeholder="0.00" /></div>
+            <div class="form-group"><label>Data</label><input id="g-data" type="date" /></div>
+          </div>
+          <button class="btn btn-primary" onclick="addGasto()">Registrar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>Histórico de Gastos</h3><span id="total-gastos-label" style="font-size:13px;font-weight:500;color:#E24B4A"></span></div>
+        <div class="card-body" style="padding:0">
+          <table>
+            <thead><tr><th>Data</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th></th></tr></thead>
+            <tbody id="gastos-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let state = {
+  platforms: [],
+  gastos: [],
+  daily: {}
+};
+
+try { const s = localStorage.getItem('cpa_state'); if(s) state = JSON.parse(s); } catch(e){}
+
+function save() {
+  try { localStorage.setItem('cpa_state', JSON.stringify(state)); } catch(e){}
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.opacity = 1;
+  setTimeout(() => t.style.opacity = 0, 2200);
+}
+
+function fmt(n) {
+  if (isNaN(n) || n === null || n === undefined) return 'R$ 0,00';
+  return 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function fmtPct(n) { return (isNaN(n)||!isFinite(n)) ? '0,0%' : n.toFixed(1).replace('.',',') + '%'; }
+function fmtN(n) { return isNaN(n) ? 0 : Math.round(n*100)/100; }
+
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+
+const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const sel = document.getElementById('mes-sel');
+const asel = document.getElementById('ano-sel');
+meses.forEach((m,i) => { const o = document.createElement('option'); o.value=i+1; o.textContent=m; sel.appendChild(o); });
+sel.value = new Date().getMonth()+1;
+[2024,2025,2026,2027].forEach(y => { const o=document.createElement('option'); o.value=y; o.textContent=y; asel.appendChild(o); });
+asel.value = new Date().getFullYear();
+
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('[id^="tab-"]').forEach(t=>t.classList.add('hidden'));
+  document.getElementById('tab-'+name).classList.remove('hidden');
+  if(name==='painel') renderPainel();
+  if(name==='plataformas') renderPlatforms();
+  if(name==='diario') renderDaily();
+  if(name==='gastos') renderGastos();
+}
+
+function platformStats(p) {
+  const totalDep = (p.accounts||[]).reduce((s,a)=>s+(+a.deposito||0),0);
+  const totalSaque = (p.accounts||[]).reduce((s,a)=>s+(+a.saque||0),0);
+  const totalBau = (p.accounts||[]).reduce((s,a)=>s+(+a.bau||0),0);
+  const totalLucro = (p.accounts||[]).reduce((s,a)=>s+(+a.lucro||0),0);
+  const totalGastos = (p.gastos||[]).reduce((s,g)=>s+(+g.val||0),0);
+  const resultado = totalSaque - totalDep + totalBau + totalLucro - totalGastos;
+  return {totalDep,totalSaque,totalBau,totalLucro,totalGastos,resultado};
+}
+
+function allStats() {
+  const gTotal = state.gastos.reduce((s,g)=>s+(+g.val||0),0);
+  let dep=0,saq=0,bau=0,luc=0,gastos=gTotal;
+  let contas=0;
+  state.platforms.forEach(p => {
+    const st = platformStats(p);
+    dep+=st.totalDep; saq+=st.totalSaque; bau+=st.totalBau;
+    luc+=st.totalLucro; gastos+=st.totalGastos;
+    contas+=(p.accounts||[]).length;
+  });
+  const resultado = saq - dep + bau + luc - gastos;
+  return {dep,saq,bau,luc,gastos,resultado,contas};
+}
+
+function renderPainel() {
+  const s = allStats();
+  const el = document.getElementById('main-metrics');
+  el.innerHTML = `
+    <div class="metric"><div class="metric-label">Total Depositado</div><div class="metric-val blue">${fmt(s.dep)}</div></div>
+    <div class="metric"><div class="metric-label">Total Saque</div><div class="metric-val green">${fmt(s.saq)}</div></div>
+    <div class="metric"><div class="metric-label">BAU Total</div><div class="metric-val amber">${fmt(s.bau)}</div></div>
+    <div class="metric"><div class="metric-label">Gastos Totais</div><div class="metric-val red">${fmt(s.gastos)}</div></div>
+    <div class="metric"><div class="metric-label">Resultado Líquido</div><div class="metric-val ${s.resultado>=0?'green':'red'}">${fmt(s.resultado)}</div></div>
+    <div class="metric"><div class="metric-label">Contas Criadas</div><div class="metric-val">${s.contas}</div></div>
+    <div class="metric"><div class="metric-label">Plataformas</div><div class="metric-val">${state.platforms.length}</div></div>
+  `;
+  const tb = document.getElementById('summary-table');
+  if(!state.platforms.length) { tb.innerHTML='<tr><td colspan="8" class="empty">Nenhuma plataforma cadastrada ainda.</td></tr>'; return; }
+  tb.innerHTML = state.platforms.map(p => {
+    const st = platformStats(p);
+    const r = st.resultado;
+    return `<tr>
+      <td style="font-weight:500">${p.nome}</td>
+      <td>${(p.accounts||[]).length}</td>
+      <td>${fmt(st.totalDep)}</td>
+      <td>${fmt(st.totalSaque)}</td>
+      <td>${fmt(st.totalBau)}</td>
+      <td>${fmt(st.totalGastos)}</td>
+      <td class="${r>=0?'profit-pos':'profit-neg'}">${fmt(r)}</td>
+      <td><span class="badge ${r>=0?'badge-green':'badge-red'}">${r>=0?'Positivo':'Negativo'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function showAddPlatform() {
+  document.getElementById('add-plat-form').classList.toggle('hidden');
+}
+
+function addPlatform() {
+  const nome = document.getElementById('f-nome').value.trim();
+  const dep = parseFloat(document.getElementById('f-dep').value)||500;
+  const cap = parseFloat(document.getElementById('f-cap').value)||0;
+  if(!nome) { toast('Informe o nome da plataforma'); return; }
+  state.platforms.push({id:Date.now(),nome,depPadrao:dep,capital:cap,accounts:[],gastos:[]});
+  save(); document.getElementById('add-plat-form').classList.add('hidden');
+  document.getElementById('f-nome').value=''; document.getElementById('f-dep').value=''; document.getElementById('f-cap').value='';
+  renderPlatforms(); toast('Plataforma adicionada!');
+}
+
+function renderPlatforms() {
+  const el = document.getElementById('platforms-list');
+  if(!state.platforms.length) { el.innerHTML='<div class="card"><div class="card-body empty">Nenhuma plataforma ainda. Clique em "Nova Plataforma" para começar.</div></div>'; return; }
+  el.innerHTML = state.platforms.map(p => {
+    const st = platformStats(p);
+    const accs = p.accounts||[];
+    const rows = accs.map((a,i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td><input value="${a.ciclo||''}" onchange="updateAcc(${p.id},${i},'ciclo',this.value)" placeholder="Ciclo / ID" style="border:none;background:transparent;width:100%;font-size:13px;color:var(--color-text-primary)" /></td>
+        <td style="text-align:right"><input type="number" value="${a.deposito||''}" onchange="updateAcc(${p.id},${i},'deposito',this.value)" style="border:none;background:transparent;width:80px;font-size:13px;text-align:right;color:var(--color-text-primary)" /></td>
+        <td style="text-align:right"><input type="number" value="${a.saque||''}" onchange="updateAcc(${p.id},${i},'saque',this.value)" style="border:none;background:transparent;width:80px;font-size:13px;text-align:right;color:var(--color-text-primary)" /></td>
+        <td style="text-align:right"><input type="number" value="${a.bau||''}" onchange="updateAcc(${p.id},${i},'bau',this.value)" style="border:none;background:transparent;width:80px;font-size:13px;text-align:right;color:var(--color-text-primary)" /></td>
+        <td style="text-align:right"><input type="number" value="${a.lucro||''}" onchange="updateAcc(${p.id},${i},'lucro',this.value)" style="border:none;background:transparent;width:80px;font-size:13px;text-align:right;color:var(--color-text-primary)" /></td>
+        <td><span class="badge badge-${a.status==='concluida'?'green':a.status==='perdida'?'red':'blue'}">${a.status==='concluida'?'Concluída':a.status==='perdida'?'Perdida':'Ativa'}</span></td>
+        <td>
+          <select style="font-size:11px;padding:3px 6px;border:0.5px solid var(--color-border-secondary);border-radius:4px;background:var(--color-background-primary);color:var(--color-text-primary)" onchange="updateAcc(${p.id},${i},'status',this.value)">
+            <option value="ativa" ${a.status==='ativa'?'selected':''}>Ativa</option>
+            <option value="concluida" ${a.status==='concluida'?'selected':''}>Concluída</option>
+            <option value="perdida" ${a.status==='perdida'?'selected':''}>Perdida</option>
+          </select>
+        </td>
+        <td><button class="btn btn-danger btn-sm" onclick="removeAcc(${p.id},${i})"><i class="ti ti-trash" aria-hidden="true"></i></button></td>
+      </tr>`).join('');
+    return `
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head">
+        <div class="plat-header" style="margin:0">
+          <div class="logo" style="width:32px;height:32px;font-size:12px">${p.nome.charAt(0)}</div>
+          <div>
+            <div class="plat-name">${p.nome}</div>
+            <div class="plat-sub">Depósito padrão: ${fmt(p.depPadrao)} · Capital: ${fmt(p.capital)}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" onclick="addAccount(${p.id})"><i class="ti ti-plus" aria-hidden="true"></i> Conta</button>
+          <button class="btn btn-danger btn-sm" onclick="removePlatform(${p.id})"><i class="ti ti-trash" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="mini-grid">
+          <div class="mini-metric"><div class="mini-label">Depósito Total</div><div class="mini-val" style="color:#378ADD">${fmt(st.totalDep)}</div></div>
+          <div class="mini-metric"><div class="mini-label">Saque Total</div><div class="mini-val" style="color:#1D9E75">${fmt(st.totalSaque)}</div></div>
+          <div class="mini-metric"><div class="mini-label">BAU</div><div class="mini-val" style="color:#BA7517">${fmt(st.totalBau)}</div></div>
+          <div class="mini-metric"><div class="mini-label">Resultado</div><div class="mini-val" style="color:${st.resultado>=0?'#1D9E75':'#E24B4A'}">${fmt(st.resultado)}</div></div>
+        </div>
+        ${accs.length ? `<div style="overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th style="width:36px">#</th><th>Ciclo/ID</th>
+            <th style="text-align:right">Depósito</th><th style="text-align:right">Saque</th>
+            <th style="text-align:right">BAU</th><th style="text-align:right">Lucro</th>
+            <th>Status</th><th>Alterar</th><th></th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table></div>` : '<div class="empty" style="padding:20px">Nenhuma conta ainda. Clique em "+ Conta" para adicionar.</div>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addAccount(platId) {
+  const p = state.platforms.find(p=>p.id===platId);
+  if(!p) return;
+  if(!p.accounts) p.accounts=[];
+  p.accounts.push({ciclo:'',deposito:p.depPadrao||500,saque:0,bau:0,lucro:0,status:'ativa'});
+  save(); renderPlatforms(); toast('Conta adicionada');
+}
+
+function updateAcc(platId, idx, field, val) {
+  const p = state.platforms.find(p=>p.id===platId);
+  if(!p||!p.accounts[idx]) return;
+  p.accounts[idx][field] = (['deposito','saque','bau','lucro'].includes(field)) ? parseFloat(val)||0 : val;
+  save(); renderPlatforms(); renderPainel();
+}
+
+function removeAcc(platId, idx) {
+  const p = state.platforms.find(p=>p.id===platId);
+  if(!p) return;
+  p.accounts.splice(idx,1); save(); renderPlatforms(); toast('Conta removida');
+}
+
+function removePlatform(platId) {
+  if(!confirm('Remover esta plataforma e todas as suas contas?')) return;
+  state.platforms = state.platforms.filter(p=>p.id!==platId);
+  save(); renderPlatforms(); toast('Plataforma removida');
+}
+
+function renderDaily() {
+  const mes = parseInt(sel.value);
+  const ano = parseInt(asel.value);
+  const key = `${ano}-${mes}`;
+  if(!state.daily[key]) state.daily[key] = {};
+  const days = new Date(ano,mes,0).getDate();
+  const tb = document.getElementById('daily-table');
+  let totalBruto=0, totalLucro=0;
+  const s = allStats();
+  const capital = s.dep || 1;
+
+  let rows = '';
+  for(let d=1;d<=days;d++) {
+    const dk = `d${d}`;
+    if(!state.daily[key][dk]) state.daily[key][dk]={capital:capital,bruto:0};
+    const row = state.daily[key][dk];
+    const pct = row.capital>0 ? (row.bruto/row.capital*100) : 0;
+    const lucro = row.bruto;
+    totalBruto+=row.bruto; totalLucro+=lucro;
+    rows += `<tr>
+      <td style="font-weight:500;color:var(--color-text-secondary)">${d}</td>
+      <td style="text-align:right"><input type="number" value="${row.capital||''}" onchange="updateDaily('${key}','${dk}','capital',this.value)" style="border:none;background:transparent;width:90px;text-align:right;font-size:13px;color:var(--color-text-primary)" placeholder="0" /></td>
+      <td style="text-align:right"><input type="number" value="${row.bruto||''}" onchange="updateDaily('${key}','${dk}','bruto',this.value)" style="border:none;background:transparent;width:100px;text-align:right;font-size:13px;color:var(--color-text-primary)" placeholder="0" /></td>
+      <td style="text-align:right;color:${pct>0?'#1D9E75':pct<0?'#E24B4A':'var(--color-text-secondary)'};font-weight:${pct!==0?'500':'400'}">${fmtPct(pct)}</td>
+      <td style="text-align:right;color:${lucro>0?'#1D9E75':lucro<0?'#E24B4A':'var(--color-text-secondary)'};font-weight:${lucro!==0?'500':'400'}">${lucro!==0?fmt(lucro):'—'}</td>
+    </tr>`;
+  }
+  rows += `<tr style="background:var(--color-background-secondary)">
+    <td colspan="2" style="font-weight:500">Total ${meses[mes-1]}</td>
+    <td style="text-align:right;font-weight:500">${fmt(totalBruto)}</td>
+    <td></td>
+    <td style="text-align:right;font-weight:500;color:${totalLucro>=0?'#1D9E75':'#E24B4A'}">${fmt(totalLucro)}</td>
+  </tr>`;
+  tb.innerHTML = rows;
+  document.getElementById('daily-total-bruto').textContent = `Bruto: ${fmt(totalBruto)}`;
+  document.getElementById('daily-total-lucro').textContent = `Líquido: ${fmt(totalLucro)}`;
+  document.getElementById('daily-total-lucro').style.color = totalLucro>=0?'#1D9E75':'#E24B4A';
+}
+
+function updateDaily(key, dk, field, val) {
+  if(!state.daily[key]) state.daily[key]={};
+  if(!state.daily[key][dk]) state.daily[key][dk]={capital:0,bruto:0};
+  state.daily[key][dk][field] = parseFloat(val)||0;
+  save();
+  const mes = parseInt(sel.value), ano = parseInt(asel.value);
+  const curKey = `${ano}-${mes}`;
+  if(key===curKey) {
+    const days = new Date(ano,mes,0).getDate();
+    let tb=0,tl=0;
+    for(let d=1;d<=days;d++){
+      const r=state.daily[key][`d${d}`]||{capital:0,bruto:0};
+      tb+=r.bruto; tl+=r.bruto;
+    }
+    document.getElementById('daily-total-bruto').textContent=`Bruto: ${fmt(tb)}`;
+    document.getElementById('daily-total-lucro').textContent=`Líquido: ${fmt(tl)}`;
+    document.getElementById('daily-total-lucro').style.color=tl>=0?'#1D9E75':'#E24B4A';
+  }
+}
+
+function showAddGasto() { document.getElementById('add-gasto-form').classList.toggle('hidden'); document.getElementById('g-data').value=new Date().toISOString().slice(0,10); }
+
+function addGasto() {
+  const cat = document.getElementById('g-cat').value;
+  const desc = document.getElementById('g-desc').value.trim();
+  const val = parseFloat(document.getElementById('g-val').value)||0;
+  const data = document.getElementById('g-data').value;
+  if(!val) { toast('Informe o valor'); return; }
+  state.gastos.push({id:Date.now(),cat,desc,val,data});
+  save(); document.getElementById('add-gasto-form').classList.add('hidden');
+  document.getElementById('g-desc').value=''; document.getElementById('g-val').value='';
+  renderGastos(); toast('Gasto registrado!');
+}
+
+function removeGasto(id) {
+  state.gastos = state.gastos.filter(g=>g.id!==id);
+  save(); renderGastos(); toast('Gasto removido');
+}
+
+function renderGastos() {
+  const tb = document.getElementById('gastos-table');
+  const total = state.gastos.reduce((s,g)=>s+(+g.val||0),0);
+  document.getElementById('total-gastos-label').textContent = 'Total: ' + fmt(total);
+  if(!state.gastos.length){tb.innerHTML='<tr><td colspan="5" class="empty">Nenhum gasto registrado.</td></tr>';return;}
+  const sorted = [...state.gastos].sort((a,b)=>b.data.localeCompare(a.data));
+  const catColors={SMS:'badge-blue',Proxy:'badge-amber',VPN:'badge-green','Conta Virtual':'badge-blue',Outros:'badge-red'};
+  tb.innerHTML = sorted.map(g => `<tr>
+    <td style="color:var(--color-text-secondary)">${g.data ? new Date(g.data+'T12:00').toLocaleDateString('pt-BR') : '—'}</td>
+    <td><span class="badge ${catColors[g.cat]||'badge-blue'}">${g.cat}</span></td>
+    <td>${g.desc||'—'}</td>
+    <td style="font-weight:500;color:#E24B4A">${fmt(g.val)}</td>
+    <td><button class="btn btn-danger btn-sm" onclick="removeGasto(${g.id})"><i class="ti ti-trash" aria-hidden="true"></i></button></td>
+  </tr>`).join('');
+}
+
+function exportData() {
+  const s = allStats();
+  const lines = [
+    'GERENCIAMENTO CPA — EXPORTAÇÃO',
+    `Data: ${new Date().toLocaleDateString('pt-BR')}`,
+    '',
+    'RESUMO GERAL',
+    `Total Depositado: ${fmt(s.dep)}`,
+    `Total Saque: ${fmt(s.saq)}`,
+    `BAU: ${fmt(s.bau)}`,
+    `Gastos: ${fmt(s.gastos)}`,
+    `Resultado Líquido: ${fmt(s.resultado)}`,
+    `Contas: ${s.contas}`,
+    '',
+    'PLATAFORMAS',
+    ...state.platforms.map(p => {
+      const st = platformStats(p);
+      return `${p.nome}: ${(p.accounts||[]).length} contas | Dep ${fmt(st.totalDep)} | Saque ${fmt(st.totalSaque)} | Resultado ${fmt(st.resultado)}`;
+    }),
+    '',
+    'GASTOS',
+    ...state.gastos.map(g => `${g.data} | ${g.cat} | ${g.desc} | ${fmt(g.val)}`)
+  ];
+  const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `CPA_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  toast('Exportado!');
+}
+
+renderPainel();
+</script>
